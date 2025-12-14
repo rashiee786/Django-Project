@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h3 class="text-center mb-4">🛍️ Your Cart</h3>
+
+  {% if cart_items %}
+    <table class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th scope="col">Image</th>
+          <th scope="col">Product</th>
+          <th scope="col">Price</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Total</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart_items %}
+        <tr>
+          <td>
+            {% if item.product.image %}
+              <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" width="80" height="80">
+            {% else %}
+              <span class="text-muted">No image</span>
+            {% endif %}
+          </td>
+          <td>{{ item.product.name }}</td>
+          <td>₹{{ item.product.price }}</td>
+          <td>
+            <!-- Update quantity form -->
+            <form action="{% url 'update_cart_item' item.id %}" method="post" class="d-flex">
+              {% csrf_token %}
+              <input type="number" name="quantity" value="{{ item.quantity }}" min="0"
+                     class="form-control form-control-sm" style="width:80px;">
+               <button type="submit" class="btn btn-sm btn-success ms-2">Update</button>
+            </form>
+          </td>
+          <td>₹{{ item.line_total }}</td>
+          <td>
+            <!-- Remove item form -->
+            <form action="{% url 'remove_cart_item' item.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="text-end mt-4">
+      <h4>Grand Total: ₹{{ total }}</h4>
+      <a href="{% url 'checkout' %}" class="btn btn-success mt-2">Proceed to Checkout</a>
+    </div>
+
+    <!-- Clear cart button -->
+    <form action="{% url 'clear_cart' %}" method="post" class="text-end mt-2">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-warning">Clear Cart</button>
+    </form>
+
+  {% else %}
+    <div class="alert alert-info text-center">
+      Your cart is empty. <a href="{% url 'products_view' %}">Shop now</a> to add items!
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+
+
+

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>All Orders</h2>
+<table>
+  <tr>
+    <th>User</th>
+    <th>Product</th>
+    <th>Status</th>
+    <th>Date</th>
+    <th>Actions</th>
+  </tr>
+  {% for order in orders %}
+  <tr>
+    <td>{{ order.user.username }}</td>
+    <td>{{ order.product.name }}</td>
+    <td>{{ order.status }}</td>
+    <td>{{ order.order_date }}</td>
+    <td>
+      <a href="{% url 'update_order_status' order.id %}">Update</a> |
+      <a href="{% url 'delete_order' order.id %}">Delete</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
+
