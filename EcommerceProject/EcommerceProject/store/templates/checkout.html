@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">🧾 Checkout</h2>
+
+  <h4>Order Summary</h4>
+  {% if cart_items %}
+    <ul class="list-group mb-4">
+      {% for item in cart_items %}
+      <li class="list-group-item d-flex justify-content-between">
+        {{ item.product.name }} × {{ item.quantity }}
+        <span>₹{{ item.item_total }}</span>
+      </li>
+      {% endfor %}
+      <li class="list-group-item d-flex justify-content-between fw-bold">
+        Grand Total
+        <span>₹{{ total }}</span>
+      </li>
+    </ul>
+    
+    <!-- Address Form -->
+    <h4>Delivery Details</h4>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary mt-3">Place Order</button>
+    </form>
+  {% else %}
+    <div class="alert alert-info text-center">
+      Your cart is empty. <a href="{% url 'products_view' %}">Shop now</a> to add items!
+    </div>
+ {% endif %}
+</div>
+{% endblock %}
+
+
